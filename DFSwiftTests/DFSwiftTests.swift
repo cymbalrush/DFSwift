@@ -22,12 +22,36 @@ class DFSwiftTests: XCTestCase {
         super.tearDown()
     }
     
-    func testTask() {
-        var task2 = task({(x:Int, y:Int) -> Int in
-            return x
+    func testTaskCreation() {
+        var task0 = task({() -> Int in
+            return 1
         })
-        XCTAssert(task2.ports.count == 2, "Count must be 2")
+        XCTAssert(task0.ports.count == 0, "Port count must be 0")
+        
+        
+        var task1 = task({(a:Int) -> Int in
+            return a
+        })
+        XCTAssert(task1.ports.count == 1, "Port count must be 1")
+        
+        
+        var task2 = task({(a:Int, b:Int) -> Int in
+            return a
+        })
+        XCTAssert(task2.ports.count == 2, "Port count must be 2")
+        
+        var task3 = task({(a: Int, b:Int, c:Int) -> Int  in
+            return a
+        })
+        XCTAssert(task3.ports.count == 3, "Port count must be 3")
+        
+        var task4 = task({(a: Int, b:Int, c:Int, d:Int) -> Int  in
+            return a
+        })
+        XCTAssert(task4.ports.count == 4, "Port count must be 4")
+
     }
+    
     
     
     func testPerformanceExample() {
