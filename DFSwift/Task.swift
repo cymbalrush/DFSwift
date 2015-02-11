@@ -37,16 +37,18 @@ class DFTask<T>:Task {
     var state:TaskState
     var priority:TaskPriority
     var suspended:Bool = false
-    lazy var ports:[InPort<Any>] = {
+    lazy var ports:[Port] = {
         [unowned self] in
-        return [InPort<Any>]()
+        var array:[Port] = [Port]()
+        self.addPort(&array)
+        return array
     }()
     
     init () {
         state = .Ready
         priority = .Normal
         out = OutPort<T>()
-       // out.task = self
+        out.task = self
     }
     
    convenience init (_ closure:()->T) {
@@ -108,7 +110,7 @@ class DFTask<T>:Task {
         return nil
     }
     
-    func addPort(inout ports:[Any]) {}
+    func addPort(inout ports:[Port]) {}
 }
 
 class DFTask1 <T1, T> : DFTask<T> {
@@ -162,7 +164,7 @@ class DFTask1 <T1, T> : DFTask<T> {
         return x1
     }
     
-    override func addPort(inout ports:[Any]) {
+    override func addPort(inout ports:[Port]) {
         super.addPort(&ports)
         ports.append(in1)
     }
@@ -218,6 +220,11 @@ class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
     func portValue(number:PortNumber2) -> T2? {
         return x2
     }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in2)
+    }
 }
 
 class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
@@ -269,6 +276,11 @@ class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
     
     func portValue(number:PortNumber3) -> T3? {
         return x3
+    }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in3)
     }
 }
 
@@ -322,6 +334,11 @@ class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
     func portValue(number:PortNumber4) -> T4? {
         return x4
     }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in4)
+    }
 }
 
 class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
@@ -373,6 +390,11 @@ class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
     
     func portValue(number:PortNumber5) -> T5? {
         return x5
+    }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in5)
     }
 }
 
@@ -426,6 +448,11 @@ class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T> {
     func portValue(number:PortNumber6) -> T6? {
         return x6
     }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in6)
+    }
 }
 
 class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T> {
@@ -477,6 +504,11 @@ class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T
     
     func portValue(number:PortNumber7) -> T7? {
         return x7
+    }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in7)
     }
 }
 
@@ -530,6 +562,11 @@ class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4, T5, T
     func portValue(number:PortNumber8) -> T8? {
         return x8
     }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in8)
+    }
 }
 
 class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
@@ -582,6 +619,11 @@ class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T
     func portValue(number:PortNumber9) -> T9? {
         return x9
     }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in9)
+    }
 }
 
 class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
@@ -633,6 +675,11 @@ class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3,
     
     func portValue(number:PortNumber10) -> T10? {
         return x10
+    }
+    
+    override func addPort(inout ports:[Port]) {
+        super.addPort(&ports)
+        ports.append(in10)
     }
 }
 
