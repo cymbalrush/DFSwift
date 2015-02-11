@@ -17,7 +17,7 @@ public enum TaskPriority:Int {
 }
 
 public protocol Task {
-    var state:TaskState {get set}
+    var state:Observable<TaskState> {get set}
     var priority:TaskPriority {get set}
     var suspended:Bool {get}
     func pause()
@@ -34,7 +34,7 @@ public protocol Task {
 public class DFTask<T>:Task {
     var closure0:(()->T)?
     var out:OutPort<T>
-    public var state:TaskState
+    public var state:Observable<TaskState>
     public var priority:TaskPriority
     public var suspended:Bool = false
     public lazy var ports:[Port] = {
@@ -45,7 +45,7 @@ public class DFTask<T>:Task {
     }()
     
     init () {
-        state = .Ready
+        state = Observable(.Ready)
         priority = .Normal
         out = OutPort<T>()
         out.task = self

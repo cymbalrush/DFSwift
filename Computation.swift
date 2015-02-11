@@ -8,6 +8,9 @@
 
 import Foundation
 
+class Channel<T> {
+}
+
 
 class DFComputation<T> {
     var queue:NSOperationQueue?
@@ -19,4 +22,9 @@ class DFComputation<T> {
         self.task = task
     }
     
+    func addDependency(task:Task) {
+        
+        
+    }
+   
 }
