@@ -8,12 +8,12 @@
 
 import Foundation
 
-protocol PortNumber:Printable {}
+public protocol PortNumber:Printable {}
 
-enum PortNumber1:Int, PortNumber, Printable  {
+public enum PortNumber1:Int, PortNumber, Printable  {
     case Port1 = 1
     
-    var description:String {
+    public var description:String {
         return "PORT_1"
     }
     
@@ -22,10 +22,10 @@ enum PortNumber1:Int, PortNumber, Printable  {
     }
 }
 
-enum PortNumber2:Int, PortNumber {
+public enum PortNumber2:Int, PortNumber {
     case Port2 = 2
     
-    var description:String {
+    public var description:String {
         return "PORT_2"
     }
     
@@ -34,10 +34,10 @@ enum PortNumber2:Int, PortNumber {
     }
 }
 
-enum PortNumber3:Int, PortNumber {
+public enum PortNumber3:Int, PortNumber {
     case Port3 = 3
     
-    var description:String {
+    public var description:String {
         return "PORT_3"
     }
     
@@ -46,10 +46,10 @@ enum PortNumber3:Int, PortNumber {
     }
 }
 
-enum PortNumber4:Int, PortNumber {
+public enum PortNumber4:Int, PortNumber {
     case Port4 = 4
     
-    var description:String {
+    public var description:String {
         return "PORT_4"
     }
     
@@ -58,10 +58,10 @@ enum PortNumber4:Int, PortNumber {
     }
 }
 
-enum PortNumber5:Int, PortNumber {
+public enum PortNumber5:Int, PortNumber {
     case Port5 = 5
     
-    var description:String {
+    public var description:String {
         return "PORT_5"
     }
     
@@ -70,10 +70,10 @@ enum PortNumber5:Int, PortNumber {
     }
 }
 
-enum PortNumber6:Int, PortNumber {
+public enum PortNumber6:Int, PortNumber {
     case Port6 = 6
     
-    var description:String {
+    public var description:String {
         return "PORT_6"
     }
     
@@ -82,10 +82,10 @@ enum PortNumber6:Int, PortNumber {
     }
 }
 
-enum PortNumber7:Int, PortNumber {
+public enum PortNumber7:Int, PortNumber {
     case Port7 = 7
     
-    var description:String {
+    public var description:String {
         return "PORT_7"
     }
     
@@ -94,10 +94,10 @@ enum PortNumber7:Int, PortNumber {
     }
 }
 
-enum PortNumber8:Int, PortNumber {
+public enum PortNumber8:Int, PortNumber {
     case Port8 = 8
     
-    var description:String {
+    public var description:String {
         return "PORT_8"
     }
     
@@ -106,10 +106,10 @@ enum PortNumber8:Int, PortNumber {
     }
 }
 
-enum PortNumber9:Int, PortNumber {
+public enum PortNumber9:Int, PortNumber {
     case Port9 = 9
     
-    var description:String {
+    public var description:String {
         return "PORT_9"
     }
     
@@ -118,10 +118,10 @@ enum PortNumber9:Int, PortNumber {
     }
 }
 
-enum PortNumber10:Int, PortNumber {
+public enum PortNumber10:Int, PortNumber {
     case Port10 = 10
     
-    var description:String {
+    public var description:String {
         return "PORT_10"
     }
     
@@ -130,18 +130,18 @@ enum PortNumber10:Int, PortNumber {
     }
 }
 
-protocol Port {
+public protocol Port {
     var identifier:String? {get set}
     var desc:String? {get set}
     var task:Task? {get set}
     //var value:Any? {get set}
 }
 
-struct InPort<T>:Port {
-    var number:PortNumber
-    var task:Task?
-    var identifier:String? = nil
-    var desc:String? = nil
+public struct InPort<T>:Port {
+    public var number:PortNumber
+    public var task:Task?
+    public var identifier:String? = nil
+    public var desc:String? = nil
     var value:T? {
         get {
             return task?.portValue(number) as? T
@@ -158,11 +158,11 @@ struct InPort<T>:Port {
     }
 }
 
-struct OutPort<T>:Port {
-    var identifier:String? = nil
-    var desc:String? = nil
+public struct OutPort<T>:Port {
+    public var identifier:String? = nil
+    public var desc:String? = nil
+    public var task:Task?
     var value:Any? = nil
-    var task:Task?
     
     init (task:Task? = nil) {
         self.task = task

@@ -8,11 +8,15 @@
 
 import Foundation
 
-enum TaskState:Int {
+public enum TaskState:Int {
     case Ready, Executing, Done
 }
 
-protocol Task {
+public enum TaskPriority:Int {
+    case High, Normal, Low, Background
+}
+
+public protocol Task {
     var state:TaskState {get set}
     var priority:TaskPriority {get set}
     var suspended:Bool {get}
@@ -27,17 +31,13 @@ protocol Task {
     func portValue(number:PortNumber) ->Any?
 }
 
-enum TaskPriority:Int {
-    case High, Normal, Low, Background
-}
-
-class DFTask<T>:Task {
+public class DFTask<T>:Task {
     var closure0:(()->T)?
     var out:OutPort<T>
-    var state:TaskState
-    var priority:TaskPriority
-    var suspended:Bool = false
-    lazy var ports:[Port] = {
+    public var state:TaskState
+    public var priority:TaskPriority
+    public var suspended:Bool = false
+    public lazy var ports:[Port] = {
         [unowned self] in
         var array:[Port] = [Port]()
         self.addPort(&array)
@@ -78,21 +78,21 @@ class DFTask<T>:Task {
         return nil;
     }
     
-    func pause() {}
+    public func pause() {}
     
-    func resume() {}
+    public func resume() {}
     
-    func cancel() {}
+    public func cancel() {}
     
-    func clone()->Task {
+    public func clone()->Task {
         return self
     }
     
-    func portCount() -> Int {
+    public func portCount() -> Int {
         return 0;
     }
     
-    func port(number:PortNumber) -> (InPort<Any>, PortNumber, Task)? {
+    public func port(number:PortNumber) -> (InPort<Any>, PortNumber, Task)? {
         return nil
     }
     
@@ -100,25 +100,25 @@ class DFTask<T>:Task {
         return nil
     }
     
-    func connect(task: Task, number: PortNumber) -> Task? {
+    public func connect(task: Task, number: PortNumber) -> Task? {
         return nil
     }
     
-    func setPortValue(number:PortNumber, value:Any) {}
+    public func setPortValue(number:PortNumber, value:Any) {}
     
-    func portValue(number:PortNumber) ->Any? {
+    public func portValue(number:PortNumber) ->Any? {
         return nil
     }
     
     func addPort(inout ports:[Port]) {}
 }
 
-class DFTask1 <T1, T> : DFTask<T> {
+public class DFTask1 <T1, T> : DFTask<T> {
     var x1:T1?
     var in1:(InPort<T1>)
     var closure1:(T1->T)?
     
-    override init () {
+    public override init () {
         in1 = InPort<T1>(number:PortNumber1.Port1)
         super.init()
         in1.task = self
@@ -140,7 +140,7 @@ class DFTask1 <T1, T> : DFTask<T> {
         return nil;
     }
     
-    override func portCount() -> Int {
+    override public func portCount() -> Int {
         return 1;
     }
     
@@ -170,7 +170,7 @@ class DFTask1 <T1, T> : DFTask<T> {
     }
 }
 
-class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
+public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
     var x2:T2?
     var in2:InPort<T2>
     var closure2:((T1, T2) -> (T))?
@@ -197,7 +197,7 @@ class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 2
     }
     
@@ -227,7 +227,7 @@ class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
     }
 }
 
-class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
+public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
     var x3:T3?
     var in3:InPort<T3>
     var closure3:((T1, T2, T3)->(T))?
@@ -238,7 +238,7 @@ class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
         in3.task = self
     }
     
-   convenience init (_ closure:((T1, T2, T3) ->(T))) {
+    convenience init (_ closure:((T1, T2, T3) ->(T))) {
         self.init()
         closure3 = closure
     }
@@ -254,7 +254,7 @@ class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 3
     }
     
@@ -284,7 +284,7 @@ class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
     }
 }
 
-class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
+public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
     var x4:T4?
     var in4:InPort<T4>
     var closure4:((T1, T2, T3, T4)->(T))?
@@ -311,7 +311,7 @@ class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 4
     }
     
@@ -341,7 +341,7 @@ class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
     }
 }
 
-class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
+public class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
     var x5:T5?
     var in5:InPort<T5>
     var closure5:((T1, T2, T3, T4, T5)->(T))?
@@ -368,7 +368,7 @@ class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 5
     }
     
@@ -398,7 +398,7 @@ class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
     }
 }
 
-class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T> {
+public class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T> {
     var x6:T6?
     var in6:InPort<T6>
     var closure6:((T1, T2, T3, T4, T5, T6)->(T))?
@@ -425,7 +425,7 @@ class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T> {
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 6
     }
     
@@ -455,7 +455,7 @@ class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T> {
     }
 }
 
-class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T> {
+public class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T> {
     var x7:T7?
     var in7:InPort<T7>
     var closure7:((T1, T2, T3, T4, T5, T6, T7)->(T))?
@@ -482,7 +482,7 @@ class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T
         return nil;
     }
     
-    override func portCount() -> Int {
+   public override func portCount() -> Int {
         return 7
     }
     
@@ -512,7 +512,7 @@ class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T
     }
 }
 
-class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
+public class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
     var x8:T8?
     var in8:InPort<T8>
     var closure8:((T1, T2, T3, T4, T5, T6, T7, T8)->(T))?
@@ -539,7 +539,7 @@ class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4, T5, T
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 8
     }
     
@@ -569,7 +569,7 @@ class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4, T5, T
     }
 }
 
-class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
+public class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
     var x9:T9?
     var in9:InPort<T9>
     var closure9:((T1, T2, T3, T4, T5, T6, T7, T8, T9)->(T))?
@@ -596,7 +596,7 @@ class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 9
     }
     
@@ -626,7 +626,7 @@ class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T
     }
 }
 
-class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
+public class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
     var x10:T10?
     var in10:InPort<T10>
     var closure10:((T1, T2, T3, T4, T5, T6, T7, T8, T9, T10)->(T))?
@@ -653,7 +653,7 @@ class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3,
         return nil;
     }
     
-    override func portCount() -> Int {
+    public override func portCount() -> Int {
         return 10
     }
     
@@ -683,35 +683,35 @@ class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3,
     }
 }
 
-func task<T>(closure : (() ->(T))) -> DFTask<T> {
+public func task<T>(closure : (() ->(T))) -> DFTask<T> {
     return DFTask(closure);
 }
 
-func task<T1, T>(closure : (T1 ->T)) -> DFTask1<T1, T> {
+public func task<T1, T>(closure : (T1 ->T)) -> DFTask1<T1, T> {
     return DFTask1(closure);
 }
 
-func task<T1, T2, T>(closure : ((T1, T2) ->(T))) -> DFTask2<T1, T2, T> {
+public func task<T1, T2, T>(closure : ((T1, T2) ->(T))) -> DFTask2<T1, T2, T> {
     return DFTask2(closure);
 }
 
-func task<T1, T2, T3, T>(closure : ((T1, T2, T3) ->(T))) -> DFTask3<T1, T2, T3, T> {
+public func task<T1, T2, T3, T>(closure : ((T1, T2, T3) ->(T))) -> DFTask3<T1, T2, T3, T> {
     return DFTask3(closure);
 }
 
-func task<T1, T2, T3, T4, T>(closure : ((T1, T2, T3, T4) ->(T))) -> DFTask4<T1, T2, T3, T4, T> {
+public func task<T1, T2, T3, T4, T>(closure : ((T1, T2, T3, T4) ->(T))) -> DFTask4<T1, T2, T3, T4, T> {
     return DFTask4(closure);
 }
 
-func task<T1, T2, T3, T4, T5, T>(closure : ((T1, T2, T3, T4, T5) ->(T))) -> DFTask5<T1, T2, T3, T4, T5, T> {
+public func task<T1, T2, T3, T4, T5, T>(closure : ((T1, T2, T3, T4, T5) ->(T))) -> DFTask5<T1, T2, T3, T4, T5, T> {
     return DFTask5(closure);
 }
 
-func task<T1, T2, T3, T4, T5, T6, T>(closure : ((T1, T2, T3, T4, T5, T6) ->(T))) -> DFTask6<T1, T2, T3, T4, T5, T6, T> {
+public func task<T1, T2, T3, T4, T5, T6, T>(closure : ((T1, T2, T3, T4, T5, T6) ->(T))) -> DFTask6<T1, T2, T3, T4, T5, T6, T> {
     return DFTask6(closure);
 }
 
-func task<T1, T2, T3, T4, T5, T6, T7, T>(closure : ((T1, T2, T3, T4, T5, T6, T7) ->(T))) -> DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
+public func task<T1, T2, T3, T4, T5, T6, T7, T>(closure : ((T1, T2, T3, T4, T5, T6, T7) ->(T))) -> DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
     return DFTask7(closure);
 }
 
@@ -729,60 +729,43 @@ func task<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(closure : ((T1, T2, T3, T4
 
 infix operator ~> { associativity left precedence 140 } // 1
 
-func ~><T1, T>(task:DFTask<T1>, tuple:(InPort<T1>, PortNumber1,  DFTask1<T1, T>)) -> DFTask1<T1, T> {
+public func ~><T1, T>(task:DFTask<T1>, tuple:(InPort<T1>, PortNumber1,  DFTask1<T1, T>)) -> DFTask1<T1, T> {
     return tuple.2.connect(task, number: .Port1)
 }
 
-func ~><T1, T2, T >(task:DFTask<T2>, tuple:(InPort<T2>, PortNumber2, DFTask2<T1, T2, T>)) -> DFTask2<T1, T2, T> {
+public func ~><T1, T2, T >(task:DFTask<T2>, tuple:(InPort<T2>, PortNumber2, DFTask2<T1, T2, T>)) -> DFTask2<T1, T2, T> {
     return tuple.2.connect(task, number: .Port2)
 }
 
-func ~><T1, T2, T3, T>(task:DFTask<T3>, tuple:(InPort<T3>, PortNumber3, DFTask3<T1, T2, T3, T>)) -> DFTask3<T1, T2, T3, T> {
+public func ~><T1, T2, T3, T>(task:DFTask<T3>, tuple:(InPort<T3>, PortNumber3, DFTask3<T1, T2, T3, T>)) -> DFTask3<T1, T2, T3, T> {
     return tuple.2.connect(task, number: .Port3)
 }
 
-func ~><T1, T2, T3, T4, T>(task:DFTask<T4>, tuple:(InPort<T4>, PortNumber4, DFTask4<T1, T2, T3, T4, T>)) -> DFTask4<T1, T2, T3, T4, T> {
+public func ~><T1, T2, T3, T4, T>(task:DFTask<T4>, tuple:(InPort<T4>, PortNumber4, DFTask4<T1, T2, T3, T4, T>)) -> DFTask4<T1, T2, T3, T4, T> {
     return tuple.2.connect(task, number: .Port4)
 }
 
-func ~><T1, T2, T3, T4, T5, T>(task:DFTask<T5>, tuple:(InPort<T5>,  PortNumber5, DFTask5<T1, T2, T3, T4, T5, T>)) -> DFTask5<T1, T2, T3, T4, T5, T>? {
+public func ~><T1, T2, T3, T4, T5, T>(task:DFTask<T5>, tuple:(InPort<T5>,  PortNumber5, DFTask5<T1, T2, T3, T4, T5, T>)) -> DFTask5<T1, T2, T3, T4, T5, T>? {
     return tuple.2.connect(task, number: .Port5)
 }
 
-func ~><T1, T2, T3, T4, T5, T6, T>(task:DFTask<T6>, tuple:(InPort<T6>, PortNumber6, DFTask6<T1, T2, T3, T4, T5, T6, T>)) -> DFTask6<T1, T2, T3, T4, T5, T6, T> {
+public func ~><T1, T2, T3, T4, T5, T6, T>(task:DFTask<T6>, tuple:(InPort<T6>, PortNumber6, DFTask6<T1, T2, T3, T4, T5, T6, T>)) -> DFTask6<T1, T2, T3, T4, T5, T6, T> {
     return tuple.2.connect(task, number: .Port6)
 }
 
-func ~><T1, T2, T3, T4, T5, T6, T7, T>(task:DFTask<T7>, tuple:(InPort<T7>, PortNumber7, DFTask7<T1, T2, T3, T4, T5, T6, T7, T>)) -> DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
+public func ~><T1, T2, T3, T4, T5, T6, T7, T>(task:DFTask<T7>, tuple:(InPort<T7>, PortNumber7, DFTask7<T1, T2, T3, T4, T5, T6, T7, T>)) -> DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
     return tuple.2.connect(task, number: .Port7)
 }
 
-func ~><T1, T2, T3, T4, T5, T6, T7,  T8, T>(task:DFTask<T8>, tuple:(InPort<T8>, PortNumber8, DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T>)) -> DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
+public func ~><T1, T2, T3, T4, T5, T6, T7,  T8, T>(task:DFTask<T8>, tuple:(InPort<T8>, PortNumber8, DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T>)) -> DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
     return tuple.2.connect(task, number: .Port8)
 }
 
-func ~><T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(task:DFTask<T9>, tuple:(InPort<T9>, PortNumber9, DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>)) -> DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
+public func ~><T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(task:DFTask<T9>, tuple:(InPort<T9>, PortNumber9, DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>)) -> DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
     return tuple.2.connect(task, number: .Port9)
 }
 
-func ~><T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(task:DFTask<T10>, tuple:(InPort<T10>, PortNumber10, DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>)) -> DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> {
+public func ~><T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(task:DFTask<T10>, tuple:(InPort<T10>, PortNumber10, DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>)) -> DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> {
     return tuple.2.connect(task, number: .Port10)
 }
-
-func sum(x:Int, y:Int)->Int {
-    return x + y
-}
-
-var df1 = task(sum)
-
-var df2 = task({(x:Int, y:Int, z:Int) -> Int in
-    return z
-})
-
-var df3 = task({(x:Int, y:Int) -> Int in
-    return  x + y
-})
-
-//var df4 = df2.bind(df1, number: .Port2)
-var df4 = df1~>df2[.Port2]~>df3[.Port1]
 

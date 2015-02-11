@@ -8,6 +8,7 @@
 
 import UIKit
 import XCTest
+import DFSwift
 
 class DFSwiftTests: XCTestCase {
     
@@ -21,10 +22,13 @@ class DFSwiftTests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
+    func testTask() {
+        var task2 = task({(x:Int, y:Int) -> Int in
+            return x
+        })
+        XCTAssert(task2.ports.count == 2, "Count must be 2")
     }
+    
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
