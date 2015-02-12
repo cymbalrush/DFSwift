@@ -17,6 +17,8 @@
 		9277DC4B1A842A260084D2C3 /* Port.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9277DC4A1A842A260084D2C3 /* Port.swift */; };
 		92EAA9CC1A89795E00A02135 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAA9CB1A89795E00A02135 /* Observer.swift */; };
 		92EAA9CE1A8A90A800A02135 /* Computation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAA9CD1A8A90A800A02135 /* Computation.swift */; };
+		92EAA9D01A8BE13000A02135 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAA9CF1A8BE13000A02135 /* Utility.swift */; };
+		92EAA9D21A8C387E00A02135 /* Operators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAA9D11A8C387E00A02135 /* Operators.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,9 +44,10 @@
 		9277DC3E1A8414FE0084D2C3 /* DFSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSwiftTests.swift; sourceTree = "<group>"; };
 		9277DC481A8415270084D2C3 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Task.swift; path = DFSwift/Task.swift; sourceTree = "<group>"; };
 		9277DC4A1A842A260084D2C3 /* Port.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Port.swift; path = DFSwift/Port.swift; sourceTree = "<group>"; };
-		92EAA9CA1A8958DD00A02135 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MyPlayground.playground; sourceTree = "<group>"; };
 		92EAA9CB1A89795E00A02135 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		92EAA9CD1A8A90A800A02135 /* Computation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Computation.swift; sourceTree = "<group>"; };
+		92EAA9CF1A8BE13000A02135 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		92EAA9D11A8C387E00A02135 /* Operators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operators.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,11 +71,12 @@
 		9277DC1A1A8414FE0084D2C3 = {
 			isa = PBXGroup;
 			children = (
-				92EAA9CA1A8958DD00A02135 /* MyPlayground.playground */,
+				92EAA9D11A8C387E00A02135 /* Operators.swift */,
 				9277DC4A1A842A260084D2C3 /* Port.swift */,
 				9277DC481A8415270084D2C3 /* Task.swift */,
-				92EAA9CD1A8A90A800A02135 /* Computation.swift */,
 				92EAA9CB1A89795E00A02135 /* Observer.swift */,
+				92EAA9CF1A8BE13000A02135 /* Utility.swift */,
+				92EAA9CD1A8A90A800A02135 /* Computation.swift */,
 				9277DC251A8414FE0084D2C3 /* DFSwift */,
 				9277DC3B1A8414FE0084D2C3 /* DFSwiftTests */,
 				9277DC241A8414FE0084D2C3 /* Products */,
@@ -226,6 +230,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92EAA9D01A8BE13000A02135 /* Utility.swift in Sources */,
+				92EAA9D21A8C387E00A02135 /* Operators.swift in Sources */,
 				9277DC2B1A8414FE0084D2C3 /* ViewController.swift in Sources */,
 				92EAA9CE1A8A90A800A02135 /* Computation.swift in Sources */,
 				92EAA9CC1A89795E00A02135 /* Observer.swift in Sources */,

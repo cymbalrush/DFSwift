@@ -96,7 +96,7 @@ public class DFTask<T>:Task {
         return nil
     }
     
-    subscript(number:PortNumber) -> (InPort<Any>, PortNumber, Task)? {
+    public subscript(number:PortNumber) -> (InPort<Any>, PortNumber, Task)? {
         return nil
     }
     
@@ -148,7 +148,7 @@ public class DFTask1 <T1, T> : DFTask<T> {
         return (in1, PortNumber1.Port1, self)
     }
     
-    subscript(number:PortNumber1) -> (InPort<T1>, PortNumber1, DFTask1<T1, T>) {
+    public subscript(number:PortNumber1) -> (InPort<T1>, PortNumber1, DFTask1<T1, T>) {
         return port(number)
     }
     
@@ -205,7 +205,7 @@ public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
         return (in2, PortNumber2.Port2, self)
     }
     
-    subscript(number:PortNumber2) -> (InPort<T2>, PortNumber2, DFTask2<T1, T2, T>) {
+    public subscript(number:PortNumber2) -> (InPort<T2>, PortNumber2, DFTask2<T1, T2, T>) {
         return port(number)
     }
     
@@ -262,7 +262,7 @@ public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
         return (in3, PortNumber3.Port3, self)
     }
     
-    subscript(number:PortNumber3) -> (InPort<T3>, PortNumber3, DFTask3<T1, T2, T3, T>) {
+    public subscript(number:PortNumber3) -> (InPort<T3>, PortNumber3, DFTask3<T1, T2, T3, T>) {
         return port(number)
     }
     
@@ -319,7 +319,7 @@ public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
         return (in4, PortNumber4.Port4, self)
     }
     
-    subscript(number:PortNumber4) -> (InPort<T4>, PortNumber4, DFTask4<T1, T2, T3, T4, T>) {
+    public subscript(number:PortNumber4) -> (InPort<T4>, PortNumber4, DFTask4<T1, T2, T3, T4, T>) {
         return port(number)
     }
     
@@ -376,7 +376,7 @@ public class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
         return (in5, PortNumber5.Port5, self)
     }
     
-    subscript(number:PortNumber5) -> (InPort<T5>, PortNumber5, DFTask5<T1, T2, T3, T4, T5, T>) {
+    public subscript(number:PortNumber5) -> (InPort<T5>, PortNumber5, DFTask5<T1, T2, T3, T4, T5, T>) {
         return port(number)
     }
     
@@ -433,7 +433,7 @@ public class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T>
         return (in6, PortNumber6.Port6, self)
     }
     
-    subscript(number:PortNumber6) -> (InPort<T6>, PortNumber6, DFTask6<T1, T2, T3, T4, T5, T6, T>) {
+    public subscript(number:PortNumber6) -> (InPort<T6>, PortNumber6, DFTask6<T1, T2, T3, T4, T5, T6, T>) {
         return port(number)
     }
     
@@ -490,7 +490,7 @@ public class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5
         return (in7, PortNumber7.Port7, self)
     }
     
-    subscript(number:PortNumber7) -> (InPort<T7>, PortNumber7, DFTask7<T1, T2, T3, T4, T5, T6, T7, T>) {
+    public subscript(number:PortNumber7) -> (InPort<T7>, PortNumber7, DFTask7<T1, T2, T3, T4, T5, T6, T7, T>) {
         return port(number)
     }
     
@@ -604,7 +604,7 @@ public class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3
         return (in9, PortNumber9.Port9, self)
     }
     
-    subscript(number:PortNumber9) -> (InPort<T9>, PortNumber9, DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>) {
+    public subscript(number:PortNumber9) -> (InPort<T9>, PortNumber9, DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>) {
         return port(number)
     }
     
@@ -661,7 +661,7 @@ public class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, 
         return (in10, PortNumber10.Port10, self)
     }
     
-    subscript(number:PortNumber10) -> (InPort<T10>, PortNumber10, DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>) {
+    public subscript(number:PortNumber10) -> (InPort<T10>, PortNumber10, DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>) {
         return port(number)
     }
     
@@ -727,45 +727,13 @@ func task<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(closure : ((T1, T2, T3, T4
     return DFTask10(closure);
 }
 
-infix operator ~> { associativity left precedence 140 } // 1
 
-public func ~><T1, T>(task:DFTask<T1>, tuple:(InPort<T1>, PortNumber1,  DFTask1<T1, T>)) -> DFTask1<T1, T> {
-    return tuple.2.connect(task, number: .Port1)
-}
+var task0 = task({() -> Int in
+    return 1
+})
 
-public func ~><T1, T2, T >(task:DFTask<T2>, tuple:(InPort<T2>, PortNumber2, DFTask2<T1, T2, T>)) -> DFTask2<T1, T2, T> {
-    return tuple.2.connect(task, number: .Port2)
-}
+var task1 = task({(a:Int) -> Int in
+    return a
+})
 
-public func ~><T1, T2, T3, T>(task:DFTask<T3>, tuple:(InPort<T3>, PortNumber3, DFTask3<T1, T2, T3, T>)) -> DFTask3<T1, T2, T3, T> {
-    return tuple.2.connect(task, number: .Port3)
-}
-
-public func ~><T1, T2, T3, T4, T>(task:DFTask<T4>, tuple:(InPort<T4>, PortNumber4, DFTask4<T1, T2, T3, T4, T>)) -> DFTask4<T1, T2, T3, T4, T> {
-    return tuple.2.connect(task, number: .Port4)
-}
-
-public func ~><T1, T2, T3, T4, T5, T>(task:DFTask<T5>, tuple:(InPort<T5>,  PortNumber5, DFTask5<T1, T2, T3, T4, T5, T>)) -> DFTask5<T1, T2, T3, T4, T5, T>? {
-    return tuple.2.connect(task, number: .Port5)
-}
-
-public func ~><T1, T2, T3, T4, T5, T6, T>(task:DFTask<T6>, tuple:(InPort<T6>, PortNumber6, DFTask6<T1, T2, T3, T4, T5, T6, T>)) -> DFTask6<T1, T2, T3, T4, T5, T6, T> {
-    return tuple.2.connect(task, number: .Port6)
-}
-
-public func ~><T1, T2, T3, T4, T5, T6, T7, T>(task:DFTask<T7>, tuple:(InPort<T7>, PortNumber7, DFTask7<T1, T2, T3, T4, T5, T6, T7, T>)) -> DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
-    return tuple.2.connect(task, number: .Port7)
-}
-
-public func ~><T1, T2, T3, T4, T5, T6, T7,  T8, T>(task:DFTask<T8>, tuple:(InPort<T8>, PortNumber8, DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T>)) -> DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
-    return tuple.2.connect(task, number: .Port8)
-}
-
-public func ~><T1, T2, T3, T4, T5, T6, T7, T8, T9, T>(task:DFTask<T9>, tuple:(InPort<T9>, PortNumber9, DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T>)) -> DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
-    return tuple.2.connect(task, number: .Port9)
-}
-
-public func ~><T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(task:DFTask<T10>, tuple:(InPort<T10>, PortNumber10, DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>)) -> DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> {
-    return tuple.2.connect(task, number: .Port10)
-}
-
+var task2 = task0~>task1[.Port1]

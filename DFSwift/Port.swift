@@ -8,10 +8,15 @@
 
 import Foundation
 
-public protocol PortNumber:Printable {}
+public protocol PortNumber:Printable {
+    var value:Int {get}
+}
 
-public enum PortNumber1:Int, PortNumber, Printable  {
+public enum PortNumber1:Int, PortNumber  {
     case Port1 = 1
+    public var value:Int {
+        return 1
+    }
     
     public var description:String {
         return "PORT_1"
@@ -24,6 +29,9 @@ public enum PortNumber1:Int, PortNumber, Printable  {
 
 public enum PortNumber2:Int, PortNumber {
     case Port2 = 2
+    public var value:Int {
+        return 2
+    }
     
     public var description:String {
         return "PORT_2"
@@ -36,6 +44,9 @@ public enum PortNumber2:Int, PortNumber {
 
 public enum PortNumber3:Int, PortNumber {
     case Port3 = 3
+    public var value:Int {
+        return 3
+    }
     
     public var description:String {
         return "PORT_3"
@@ -48,6 +59,9 @@ public enum PortNumber3:Int, PortNumber {
 
 public enum PortNumber4:Int, PortNumber {
     case Port4 = 4
+    public var value:Int {
+        return 4
+    }
     
     public var description:String {
         return "PORT_4"
@@ -60,6 +74,9 @@ public enum PortNumber4:Int, PortNumber {
 
 public enum PortNumber5:Int, PortNumber {
     case Port5 = 5
+    public var value:Int {
+        return 5
+    }
     
     public var description:String {
         return "PORT_5"
@@ -72,6 +89,9 @@ public enum PortNumber5:Int, PortNumber {
 
 public enum PortNumber6:Int, PortNumber {
     case Port6 = 6
+    public var value:Int {
+        return 6
+    }
     
     public var description:String {
         return "PORT_6"
@@ -84,6 +104,9 @@ public enum PortNumber6:Int, PortNumber {
 
 public enum PortNumber7:Int, PortNumber {
     case Port7 = 7
+    public var value:Int {
+        return 7
+    }
     
     public var description:String {
         return "PORT_7"
@@ -96,6 +119,9 @@ public enum PortNumber7:Int, PortNumber {
 
 public enum PortNumber8:Int, PortNumber {
     case Port8 = 8
+    public var value:Int {
+        return 8
+    }
     
     public var description:String {
         return "PORT_8"
@@ -108,6 +134,9 @@ public enum PortNumber8:Int, PortNumber {
 
 public enum PortNumber9:Int, PortNumber {
     case Port9 = 9
+    public var value:Int {
+        return 9
+    }
     
     public var description:String {
         return "PORT_9"
@@ -120,6 +149,9 @@ public enum PortNumber9:Int, PortNumber {
 
 public enum PortNumber10:Int, PortNumber {
     case Port10 = 10
+    public var value:Int {
+        return 10
+    }
     
     public var description:String {
         return "PORT_10"

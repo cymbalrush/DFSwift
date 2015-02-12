@@ -52,6 +52,27 @@ class DFSwiftTests: XCTestCase {
 
     }
     
+    func testTaskBinding() {
+        var task0 = task({() -> Int in
+            return 1
+        })
+        
+        var task1 = task({(a:Int) -> Int in
+            return a
+        })
+        var task2 = task({(a:Int, b:Int) -> Int in
+            return a
+        })
+        var task3 = task({(a: Int, b:Int, c:Int) -> Int  in
+            return a
+        })
+        var task4 = task({(a: Int, b:Int, c:Int, d:Int) -> Int  in
+            return a
+        })
+        task1~>task2[.Port1]~>task3[.Port3]
+
+    }
+    
     
     
     func testPerformanceExample() {

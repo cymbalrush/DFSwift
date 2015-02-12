@@ -13,40 +13,37 @@ public enum ObservingType : Int {
 }
 
 public struct Observable<T> {
+    private var lock:OSSpinLock = OS_SPINLOCK_INIT
+    var willSetObservers = Array<(T, T) -> ()>()
+    var didSetObservers = Array<(T, T) -> ()>()
     var raw : T {
         willSet {
-            if let list = observingInfo[.WillSet] {
-            
-                for closure in list {
-                    closure(newValue, self.raw)
-                }
+            let list = willSetObservers
+            for closure in list {
+                closure(newValue, self.raw)
             }
         }
         
         didSet {
-            if let list = observingInfo[.DidSet] {
-                for closure in list {
-                    closure(self.raw, oldValue)
-                }
+            let list = didSetObservers
+            for closure in list {
+                closure(self.raw, oldValue)
             }
         }
     }
     
     init(_ value : T) {
-        self.raw = value
-        observingInfo[.WillSet] = Array<(T, T) -> ()>()
-        observingInfo[.DidSet] = Array<(T, T) -> ()>()
+        raw = value
     }
-    
-    var observingInfo = [ObservingType : Array<(T, T) -> ()>]()
     
     mutating func addObserver(type: ObservingType, closure : (T, T) -> ()) {
-        var expandedArray : Array<(T, T) -> ()> = observingInfo[type]!
-        expandedArray.append(closure)
-        observingInfo[type] = expandedArray
-    }
-    
-    func __conversion() -> T {
-        return raw
+        OSSpinLockLock(&self.lock)
+        switch type {
+        case .WillSet:
+            willSetObservers.append(closure)
+        case .DidSet:
+            didSetObservers.append(closure)
+        }
+        OSSpinLockUnlock(&self.lock)
     }
 }
