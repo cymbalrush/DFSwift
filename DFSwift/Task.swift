@@ -33,10 +33,13 @@ public protocol Task {
 
 public class DFTask<T>:Task {
     var closure0:(()->T)?
-    var out:OutPort<T>
     public var state:Observable<TaskState>
     public var priority:TaskPriority
     public var suspended:Bool = false
+    private(set) lazy var out:OutPort<T> = {
+        [unowned self] in
+        return OutPort<T>(task: self)
+    }()
     public lazy var ports:[Port] = {
         [unowned self] in
         var array:[Port] = [Port]()
@@ -44,11 +47,9 @@ public class DFTask<T>:Task {
         return array
     }()
     
-    init () {
+     init () {
         state = Observable(.Ready)
         priority = .Normal
-        out = OutPort<T>()
-        out.task = self
     }
     
    convenience init (_ closure:()->T) {
@@ -115,13 +116,14 @@ public class DFTask<T>:Task {
 
 public class DFTask1 <T1, T> : DFTask<T> {
     var x1:T1?
-    var in1:(InPort<T1>)
     var closure1:(T1->T)?
+    private(set) lazy var in1:InPort<T1> = {
+        [unowned self] in
+        return InPort<T1>(number:PortNumber1.Port1, task:self)
+    }()
     
     public override init () {
-        in1 = InPort<T1>(number:PortNumber1.Port1)
         super.init()
-        in1.task = self
     }
     
     convenience init (_ closure:T1 ->T) {
@@ -172,13 +174,14 @@ public class DFTask1 <T1, T> : DFTask<T> {
 
 public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
     var x2:T2?
-    var in2:InPort<T2>
     var closure2:((T1, T2) -> (T))?
+    private(set) lazy var in2:InPort<T2> = {
+        [unowned self] in
+        return InPort<T2>(number:PortNumber2.Port2, task:self)
+    }()
     
-    override init () {
-        in2 = InPort<T2>(number:PortNumber2.Port2)
+    public override init () {
         super.init()
-        in2.task = self
     }
     
     convenience init (_ closure:((T1, T2) -> (T))) {
@@ -229,13 +232,14 @@ public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
 
 public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
     var x3:T3?
-    var in3:InPort<T3>
     var closure3:((T1, T2, T3)->(T))?
+    private(set) lazy var in3:InPort<T3> = {
+        [unowned self] in
+        return InPort<T3>(number:PortNumber3.Port3, task:self)
+    }()
     
-    override init () {
-        in3 = InPort<T3>(number:PortNumber3.Port3)
+    public override init () {
         super.init()
-        in3.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3) ->(T))) {
@@ -286,13 +290,14 @@ public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
 
 public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
     var x4:T4?
-    var in4:InPort<T4>
     var closure4:((T1, T2, T3, T4)->(T))?
+    private(set) lazy var in4:InPort<T4> = {
+        [unowned self] in
+        return InPort<T4>(number:PortNumber4.Port4, task:self)
+    }()
     
-    override init () {
-        in4 = InPort<T4>(number:PortNumber4.Port4)
+    public override init () {
         super.init()
-        in4.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4) ->(T))) {
@@ -343,13 +348,14 @@ public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
 
 public class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
     var x5:T5?
-    var in5:InPort<T5>
     var closure5:((T1, T2, T3, T4, T5)->(T))?
+    private(set) lazy var in5:InPort<T5> = {
+        [unowned self] in
+        return InPort<T5>(number:PortNumber5.Port5, task:self)
+    }()
     
-    override init () {
-        in5 = InPort<T5>(number:PortNumber5.Port5)
+    public override init () {
         super.init()
-        in5.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4, T5) ->(T))) {
@@ -400,13 +406,14 @@ public class DFTask5<T1, T2, T3, T4, T5, T> : DFTask4<T1, T2, T3, T4, T> {
 
 public class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T> {
     var x6:T6?
-    var in6:InPort<T6>
     var closure6:((T1, T2, T3, T4, T5, T6)->(T))?
+    private(set) lazy var in6:InPort<T6> = {
+        [unowned self] in
+        return InPort<T6>(number:PortNumber6.Port6, task:self)
+    }()
     
-    override init () {
-        in6 = InPort<T6>(number:PortNumber6.Port6)
+    public override init () {
         super.init()
-        in6.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4, T5, T6) ->(T))) {
@@ -457,13 +464,14 @@ public class DFTask6<T1, T2, T3, T4, T5, T6, T> : DFTask5<T1, T2, T3, T4, T5, T>
 
 public class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5, T6, T> {
     var x7:T7?
-    var in7:InPort<T7>
     var closure7:((T1, T2, T3, T4, T5, T6, T7)->(T))?
+    private(set) lazy var in7:InPort<T7> = {
+        [unowned self] in
+        return InPort<T7>(number:PortNumber7.Port7, task:self)
+    }()
     
-    override init () {
-        in7 = InPort<T7>(number:PortNumber7.Port7)
+    public override init () {
         super.init()
-        in7.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4, T5, T6, T7) ->(T))) {
@@ -514,13 +522,14 @@ public class DFTask7<T1, T2, T3, T4, T5, T6, T7, T> : DFTask6<T1, T2, T3, T4, T5
 
 public class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4, T5, T6, T7, T> {
     var x8:T8?
-    var in8:InPort<T8>
     var closure8:((T1, T2, T3, T4, T5, T6, T7, T8)->(T))?
+    private(set) lazy var in8:InPort<T8> = {
+        [unowned self] in
+        return InPort<T8>(number:PortNumber8.Port8, task:self)
+    }()
     
-    override init () {
-        in8 = InPort<T8>(number:PortNumber8.Port8)
+    public override init () {
         super.init()
-        in8.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4, T5, T6, T7, T8) ->(T))) {
@@ -571,13 +580,14 @@ public class DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> : DFTask7<T1, T2, T3, T4
 
 public class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3, T4, T5, T6, T7, T8, T> {
     var x9:T9?
-    var in9:InPort<T9>
     var closure9:((T1, T2, T3, T4, T5, T6, T7, T8, T9)->(T))?
+    private(set) lazy var in9:InPort<T9> = {
+        [unowned self] in
+        return InPort<T9>(number:PortNumber9.Port9, task:self)
+    }()
     
-    override init () {
-        in9 = InPort<T9>(number:PortNumber9.Port9)
+    public override init () {
         super.init()
-        in9.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4, T5, T6, T7, T8, T9) ->(T))) {
@@ -628,13 +638,14 @@ public class DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> : DFTask8<T1, T2, T3
 
 public class DFTask10<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T> : DFTask9<T1, T2, T3, T4, T5, T6, T7, T8, T9, T> {
     var x10:T10?
-    var in10:InPort<T10>
     var closure10:((T1, T2, T3, T4, T5, T6, T7, T8, T9, T10)->(T))?
+    private(set) lazy var in10:InPort<T10> = {
+        [unowned self] in
+        return InPort<T10>(number:PortNumber10.Port10, task:self)
+    }()
     
-    override init () {
-        in10 = InPort<T10>(number:PortNumber10.Port10)
+    public override init () {
         super.init()
-        in10.task = self
     }
     
     convenience init (_ closure:((T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) ->(T))) {
@@ -727,13 +738,3 @@ func task<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T>(closure : ((T1, T2, T3, T4
     return DFTask10(closure);
 }
 
-
-var task0 = task({() -> Int in
-    return 1
-})
-
-var task1 = task({(a:Int) -> Int in
-    return a
-})
-
-var task2 = task0~>task1[.Port1]

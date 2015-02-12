@@ -69,10 +69,18 @@ class DFSwiftTests: XCTestCase {
         var task4 = task({(a: Int, b:Int, c:Int, d:Int) -> Int  in
             return a
         })
-        task1~>task2[.Port1]~>task3[.Port3]
+        task1~>task2[.Port1]~>task3[.Port3]~>task4[.Port4]
 
     }
     
+    func testObserver() {
+        var x:Observable<Int> = Observable(2)
+        x.addObserver(ObservingType.DidSet, closure: {(a:Int, b:Int)  in
+           println(a)
+           println(b)
+        })
+        x.raw = 3
+    }
     
     
     func testPerformanceExample() {

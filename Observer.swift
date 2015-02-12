@@ -16,7 +16,7 @@ public struct Observable<T> {
     private var lock:OSSpinLock = OS_SPINLOCK_INIT
     var willSetObservers = Array<(T, T) -> ()>()
     var didSetObservers = Array<(T, T) -> ()>()
-    var raw : T {
+    public var raw : T {
         willSet {
             let list = willSetObservers
             for closure in list {
@@ -32,11 +32,11 @@ public struct Observable<T> {
         }
     }
     
-    init(_ value : T) {
+    public init(_ value : T) {
         raw = value
     }
     
-    mutating func addObserver(type: ObservingType, closure : (T, T) -> ()) {
+    public mutating func addObserver(type: ObservingType, closure : (T, T) -> ()) {
         OSSpinLockLock(&self.lock)
         switch type {
         case .WillSet:
