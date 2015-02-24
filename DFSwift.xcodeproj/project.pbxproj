@@ -44,6 +44,7 @@
 		9277DC3E1A8414FE0084D2C3 /* DFSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DFSwiftTests.swift; sourceTree = "<group>"; };
 		9277DC481A8415270084D2C3 /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Task.swift; path = DFSwift/Task.swift; sourceTree = "<group>"; };
 		9277DC4A1A842A260084D2C3 /* Port.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Port.swift; path = DFSwift/Port.swift; sourceTree = "<group>"; };
+		92893BC71A93AB6E003E3994 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = DFSwift/MyPlayground.playground; sourceTree = "<group>"; };
 		92EAA9CB1A89795E00A02135 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		92EAA9CD1A8A90A800A02135 /* Computation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Computation.swift; sourceTree = "<group>"; };
 		92EAA9CF1A8BE13000A02135 /* Utility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
@@ -71,6 +72,7 @@
 		9277DC1A1A8414FE0084D2C3 = {
 			isa = PBXGroup;
 			children = (
+				92893BC71A93AB6E003E3994 /* MyPlayground.playground */,
 				92EAA9D11A8C387E00A02135 /* Operators.swift */,
 				9277DC4A1A842A260084D2C3 /* Port.swift */,
 				9277DC481A8415270084D2C3 /* Task.swift */,

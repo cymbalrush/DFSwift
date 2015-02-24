@@ -12,172 +12,98 @@ public protocol PortNumber:Printable {
     var value:Int {get}
 }
 
-public enum PortNumber1:Int, PortNumber  {
-    case Port1 = 1
+public struct Port1:PortNumber {
     public var value:Int {
         return 1
     }
     
     public var description:String {
-        return "PORT_1"
+        return "PORT1"
     }
     
-    func toString() -> String {
+    public func toString() -> String {
         return description
     }
 }
 
-public enum PortNumber2:Int, PortNumber {
-    case Port2 = 2
+public let PORT1 = Port1()
+
+public struct Port2:PortNumber {
     public var value:Int {
         return 2
     }
     
     public var description:String {
-        return "PORT_2"
+        return "PORT2"
     }
     
-    func toString() -> String {
+    public func toString() -> String {
         return description
     }
 }
 
-public enum PortNumber3:Int, PortNumber {
-    case Port3 = 3
+public let PORT2 = Port2()
+
+public struct Port3:PortNumber {
     public var value:Int {
         return 3
     }
     
     public var description:String {
-        return "PORT_3"
+        return "PORT3"
     }
     
-    func toString() -> String {
+    public func toString() -> String {
         return description
     }
 }
 
-public enum PortNumber4:Int, PortNumber {
-    case Port4 = 4
+public let PORT3 = Port3()
+
+public struct Port4:PortNumber {
     public var value:Int {
         return 4
     }
     
     public var description:String {
-        return "PORT_4"
+        return "PORT4"
     }
     
-    func toString() -> String {
+    public func toString() -> String {
         return description
     }
 }
 
-public enum PortNumber5:Int, PortNumber {
-    case Port5 = 5
-    public var value:Int {
-        return 5
-    }
-    
-    public var description:String {
-        return "PORT_5"
-    }
-    
-    func toString() -> String {
-        return description
-    }
-}
-
-public enum PortNumber6:Int, PortNumber {
-    case Port6 = 6
-    public var value:Int {
-        return 6
-    }
-    
-    public var description:String {
-        return "PORT_6"
-    }
-    
-    func toString() -> String {
-        return description
-    }
-}
-
-public enum PortNumber7:Int, PortNumber {
-    case Port7 = 7
-    public var value:Int {
-        return 7
-    }
-    
-    public var description:String {
-        return "PORT_7"
-    }
-    
-    func toString() -> String {
-        return description
-    }
-}
-
-public enum PortNumber8:Int, PortNumber {
-    case Port8 = 8
-    public var value:Int {
-        return 8
-    }
-    
-    public var description:String {
-        return "PORT_8"
-    }
-    
-    func toString() -> String {
-        return description
-    }
-}
-
-public enum PortNumber9:Int, PortNumber {
-    case Port9 = 9
-    public var value:Int {
-        return 9
-    }
-    
-    public var description:String {
-        return "PORT_9"
-    }
-    
-    func toString() -> String {
-        return description
-    }
-}
-
-public enum PortNumber10:Int, PortNumber {
-    case Port10 = 10
-    public var value:Int {
-        return 10
-    }
-    
-    public var description:String {
-        return "PORT_10"
-    }
-    
-    func toString() -> String {
-        return description
-    }
-}
+public let PORT4 = Port4()
 
 public protocol Port {
     var identifier:String? {get set}
     var desc:String? {get set}
     var task:Task? {get set}
-    //var value:Any? {get set}
+    var value:Any? {get set}
 }
 
+public protocol TypedPort:Port {
+    typealias PortType
+    var typedValue:PortType? {get set}
+}
 
-public struct InPort<T>:Port {
+public struct InPort<PortType>:TypedPort {
     public var number:PortNumber
     public var task:Task?
     public var identifier:String? = nil
     public var desc:String? = nil
-    var value:T? {
+    public var typedValue:PortType? {
         get {
-            return task?.portValue(number) as? T
+            return task?.portValue(number) as? PortType
+        }
+        set {
+            task?.setPortValue(number, value: newValue)
+        }
+    }
+    public var value:Any? {
+        get {
+            return task?.portValue(number)
         }
         set {
             task?.setPortValue(number, value: newValue)
@@ -195,8 +121,7 @@ public struct OutPort<T>:Port {
     public var identifier:String? = nil
     public var desc:String? = nil
     public var task:Task?
-    var value:Any? = nil
-    
+    public var value:Any?    
     init (task:Task? = nil) {
         self.task = task
     }

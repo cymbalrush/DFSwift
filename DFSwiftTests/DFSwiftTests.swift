@@ -10,6 +10,11 @@ import UIKit
 import XCTest
 import DFSwift
 
+protocol Test {
+    typealias T
+    var x:Any {get set}
+}
+
 class DFSwiftTests: XCTestCase {
     
     override func setUp() {
@@ -53,6 +58,7 @@ class DFSwiftTests: XCTestCase {
     }
     
     func testTaskBinding() {
+        
         var task0 = task({() -> Int in
             return 1
         })
@@ -60,8 +66,8 @@ class DFSwiftTests: XCTestCase {
         var task1 = task({(a:Int) -> Int in
             return a
         })
-        var task2 = task({(a:Int, b:Int) -> Int in
-            return a
+        var task2 = task({(a:String, b:Int) -> Int in
+            return b
         })
         var task3 = task({(a: Int, b:Int, c:Int) -> Int  in
             return a
@@ -69,8 +75,11 @@ class DFSwiftTests: XCTestCase {
         var task4 = task({(a: Int, b:Int, c:Int, d:Int) -> Int  in
             return a
         })
-        task1~>task2[.Port1]~>task3[.Port3]~>task4[.Port4]
-
+        
+        task1~>task2[PORT2]
+        task2~>task3[PORT3]
+        task3~>task4[PORT4]
+       
     }
     
     func testObserver() {
@@ -81,6 +90,7 @@ class DFSwiftTests: XCTestCase {
         })
         x.raw = 3
     }
+    
     
     
     func testPerformanceExample() {
