@@ -12,53 +12,60 @@ public enum TaskState:Int {
     case Ready, Executing, Done
 }
 
-public enum TaskPriority:Int {
-    case High, Normal, Low, Background
-}
-
 public protocol Task {
     var state:Observable<TaskState> {get set}
-    var priority:TaskPriority {get set}
+    var ports:[Port] {get}
     var suspended:Bool {get}
-    func pause()
-    func resume()
+    var priority:NSOperationQueuePriority {get set}
+    func start()
     func cancel()
-    func clone()->Task
+    func suspend()
+    func resume()
     func portCount()->Int
-    func port(number:PortNumber) -> (InPort<Any>, PortNumber, Task)?
     func connect(task:Task, number:PortNumber) -> Task?
-    func setPortValue(number:PortNumber, value:Any)
-    func portValue(number:PortNumber) ->Any?
 }
 
-public class DFTask<T>:Task {
-    var closure0:(()->T)?
-    public var state:Observable<TaskState>
-    public var priority:TaskPriority
-    public var suspended:Bool = false
-    private(set) lazy var out:OutPort<T> = {
-        [unowned self] in
+protocol _Task:Task {
+    subscript(number:PortNumber) -> Any? {get set}
+    func port(PortNumber)->InPort<Any>?
+    func clone()->Self
+    var computation:Computation {get set}
+}
+
+public class DFTask<T>:_Task {
+    private var _closure0:(()->T)?
+    private var _ports:[Port]
+    var computation:Computation
+    public var ports:[Port] {return _ports}
+    public var state:TaskState {
+        return computation.state.raw
+    }
+    public var priority:NSOperationQueuePriority {
+        get {
+            return computation.queuePriority
+        
+        }
+        set {
+            computation.queuePriority = newValue
+        }
+    }
+    public var OUT:OutPort<T> {
         return OutPort<T>(task: self)
-    }()
-    public lazy var ports:[Port] = {
-        [unowned self] in
-        var array:[Port] = [Port]()
-        self.addPort(&array)
-        return array
-    }()
-    
-     init () {
-        state = Observable(.Ready)
-        priority = .Normal
     }
     
-   convenience init (_ closure:()->T) {
+    init () {
+        _ports = [Port]()
+        self.addPort(&_ports)
+    }
+    
+    convenience init (_ closure:()->T) {
         self.init()
-        closure0 = closure
+        _closure0 = closure
     }
     
-    func compute()->T? {
-        if let closure = closure0  {
+
+    public func compute()->T? {
+        if let closure = _closure0  {
             var result:T!
             autoreleasepool {
                 result = closure()
@@ -68,23 +75,23 @@ public class DFTask<T>:Task {
         return nil;
     }
     
-    func execute()->T? {
-        if let closure = closure0  {
-            var result:T!
-            autoreleasepool {
-                result = closure()
-            }
-            return result
-        }
-        return nil;
+    
+    public func start() {
+        computation.start()
     }
     
-    public func pause() {}
+    public func suspend() {
+        computation.suspend()
+    }
     
-    public func resume() {}
+    public func resume() {
+       computation.resume()
+    }
     
-    public func cancel() {}
-    
+    public func cancel() {
+       computation.cancel()
+    }
+
     public func clone()->Task {
         return self
     }
@@ -93,34 +100,31 @@ public class DFTask<T>:Task {
         return 0;
     }
     
-    public func port(number:PortNumber) -> (InPort<Any>, PortNumber, Task)? {
-        return nil
+    subscript(number:PortNumber) -> Any? {
+        get {
+            return nil
+        }
+        set {}
     }
-    
-    public subscript(number:PortNumber) -> (InPort<Any>, PortNumber, Task)? {
-        return nil
-    }
-    
+
     public func connect(task: Task, number: PortNumber) -> Task? {
-        return nil
-    }
-    
-    public func setPortValue(number:PortNumber, value:Any) {}
-    
-    public func portValue(number:PortNumber) ->Any? {
-        return nil
+        return self
     }
     
     func addPort(inout ports:[Port]) {}
+    
+    func port(PortNumber)->InPort<Any>? {
+        return nil
+    }
+   
 }
 
 public class DFTask1 <T1, T> : DFTask<T> {
-    var x1:T1?
-    var closure1:(T1->T)?
-    private(set) lazy var in1:InPort<T1> = {
-        [unowned self] in
-        return InPort<T1>(number:PORT1, task:self)
-    }()
+    private var x1_:T1?
+    private var closure1_:(T1->T)?
+    public var IN1:(InPort<T1>, Port1, DFTask1<T1, T>) {
+        return (InPort<T1>(number:PORT1, task:self), PORT1, self)
+    }
     
     public override init () {
         super.init()
@@ -128,14 +132,14 @@ public class DFTask1 <T1, T> : DFTask<T> {
     
     convenience init (_ closure:T1 ->T) {
         self.init()
-        closure1 = closure
+        closure1_ = closure
     }
     
-    override func compute()->T? {
-        if let computation = closure1  {
+    override public func compute()->T? {
+        if let computation = closure1_  {
             var result:T!
             autoreleasepool {
-                result = computation(self.x1!)
+                result = computation(self.x1_!)
             }
             return result
         }
@@ -146,39 +150,35 @@ public class DFTask1 <T1, T> : DFTask<T> {
         return 1;
     }
     
-    func port(number:Port1) -> (InPort<T1>, Port1, DFTask1<T1, T>) {
-        return (in1, PORT1, self)
-    }
-    
-    public subscript(number:Port1) -> (InPort<T1>, Port1, DFTask1<T1, T>) {
-        return port(number)
+    public subscript(number:Port1) -> T1? {
+        get {
+            return x1_
+        }
+        set {
+            x1_ = newValue
+        }
     }
     
     func connect(task:DFTask<T1>, number:Port1) -> DFTask1<T1, T> {
         return self
     }
     
-    func setPortValue(number:Port1, value:T1) {
-         x1 = value
-    }
-    
-    func portValue(number:Port1) -> T1? {
-        return x1
-    }
-    
     override func addPort(inout ports:[Port]) {
         super.addPort(&ports)
-        ports.append(in1)
+        ports.append(InPort<T1>(number:PORT1, task:self))
+    }
+    
+    func port(Port1)->InPort<T1> {
+        return IN1.0
     }
 }
 
 public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
-    var x2:T2?
-    var closure2:((T1, T2) -> (T))?
-    private(set) lazy var in2:InPort<T2> = {
-        [unowned self] in
-        return InPort<T2>(number:PORT2, task:self)
-    }()
+    private var x2_:T2?
+    private var closure2_:((T1, T2) -> (T))?
+    public var IN2:(InPort<T2>, Port2, DFTask2<T1, T2, T>) {
+        return (InPort<T2>(number:PORT2, task:self), PORT2, self)
+    }
     
     public override init () {
         super.init()
@@ -186,14 +186,14 @@ public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
     
     convenience init (_ closure:((T1, T2) -> (T))) {
         self.init()
-        closure2 = closure
+        closure2_ = closure
     }
     
-    override func compute()->T? {
-        if let computation = closure2 {
+    override public func compute()->T? {
+        if let computation = closure2_ {
             var result:T!
             autoreleasepool {
-                result = computation(self.x1!, self.x2!)
+                result = computation(self.x1_!, self.x2_!)
             }
             return result
         }
@@ -204,39 +204,35 @@ public class DFTask2<T1, T2, T> :  DFTask1<T1, T> {
         return 2
     }
     
-    func port(number:Port2) -> (InPort<T2>, Port2, DFTask2<T1, T2, T>) {
-        return (in2, PORT2, self)
-    }
-    
-    public subscript(number:Port2) -> (InPort<T2>, Port2, DFTask2<T1, T2, T>) {
-        return port(number)
+    public subscript(number:Port2) -> T2? {
+        get {
+            return x2_
+        }
+        set {
+            x2_ = newValue
+        }
     }
     
     func connect(task:DFTask<T2>, number:Port2) -> DFTask2<T1, T2, T> {
         return self
     }
-    
-    func setPortValue(number:Port2, value:T2) {
-        x2 = value
-    }
-    
-    func portValue(number:Port2) -> T2? {
-        return x2
-    }
-    
+
     override func addPort(inout ports:[Port]) {
         super.addPort(&ports)
-        ports.append(in2)
+        ports.append(InPort<T2>(number:PORT2, task:self))
+    }
+    
+    func port(Port2)->InPort<T2> {
+        return IN2.0
     }
 }
 
 public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
-    var x3:T3?
-    var closure3:((T1, T2, T3)->(T))?
-    private(set) lazy var in3:InPort<T3> = {
-        [unowned self] in
-        return InPort<T3>(number:PORT3, task:self)
-    }()
+    private var x3_:T3?
+    private var closure3_:((T1, T2, T3)->(T))?
+    public var IN3:(InPort<T3>, Port3, DFTask3<T1, T2, T3, T>) {
+        return (InPort<T3>(number:PORT3, task:self), PORT3, self)
+    }
     
     public override init () {
         super.init()
@@ -244,14 +240,14 @@ public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
     
     convenience init (_ closure:((T1, T2, T3) ->(T))) {
         self.init()
-        closure3 = closure
+        closure3_ = closure
     }
     
-    override func compute()->T? {
-        if let closure = closure3 {
+    override public func compute()->T? {
+        if let closure = closure3_ {
             var result:T!
             autoreleasepool {
-                result = closure(self.x1!, self.x2!, self.x3!)
+                result = closure(self.x1_!, self.x2_!, self.x3_!)
             }
             return result
         }
@@ -261,40 +257,32 @@ public class DFTask3<T1, T2, T3, T> : DFTask2<T1, T2, T> {
     public override func portCount() -> Int {
         return 3
     }
-    
-    func port(number:Port3) -> (InPort<T3>, Port3, DFTask3<T1, T2, T3, T>) {
-        return (in3, PORT3, self)
-    }
-    
-    public subscript(number:Port3) -> (InPort<T3>, Port3, DFTask3<T1, T2, T3, T>) {
-        return port(number)
-    }
-    
+   
     func connect(task:DFTask<T3>, number:Port3) -> DFTask3<T1, T2, T3, T> {
         return self
     }
-    
-    func setPortValue(number:Port3, value:T3) {
-        x3 = value
-    }
-    
-    func portValue(number:Port3) -> T3? {
-        return x3
+   
+    public subscript(number:Port3) -> T3? {
+        get {
+            return x3_
+        }
+        set {
+            x3_ = newValue
+        }
     }
     
     override func addPort(inout ports:[Port]) {
         super.addPort(&ports)
-        ports.append(in3)
+        ports.append(InPort<T3>(number:PORT3, task:self))
     }
 }
 
 public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
-    var x4:T4?
-    var closure4:((T1, T2, T3, T4)->(T))?
-    private(set) lazy var in4:InPort<T4> = {
-        [unowned self] in
-        return InPort<T4>(number:PORT4, task:self)
-    }()
+    private var x4_:T4?
+    private var closure4_:((T1, T2, T3, T4)->(T))?
+    public var IN4:(InPort<T4>, Port4, DFTask4<T1, T2, T3, T4, T>) {
+        return (InPort<T4>(number:PORT4, task:self), PORT4, self)
+    }
     
     public override init () {
         super.init()
@@ -302,14 +290,14 @@ public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
     
     convenience init (_ closure:((T1, T2, T3, T4) ->(T))) {
         self.init()
-        closure4 = closure
+        closure4_ = closure
     }
     
-    override func compute()->T? {
-        if let closure = closure4 {
+    override public func compute()->T? {
+        if let closure = closure4_ {
             var result:T!
             autoreleasepool {
-                result = closure(self.x1!, self.x2!, self.x3!, self.x4!)
+                result = closure(self.x1_!, self.x2_!, self.x3_!, self.x4_!)
             }
             return result
         }
@@ -320,29 +308,22 @@ public class DFTask4<T1, T2, T3, T4, T> : DFTask3<T1, T2, T3, T> {
         return 4
     }
     
-    func port(number:Port4) -> (InPort<T4>, Port4, DFTask4<T1, T2, T3, T4, T>) {
-        return (in4, PORT4, self)
-    }
-    
-    public subscript(number:Port4) -> (InPort<T4>, Port4, DFTask4<T1, T2, T3, T4, T>) {
-        return port(number)
+    public subscript(number:Port4) -> T4? {
+        get {
+            return x4_
+        }
+        set {
+            x4_ = newValue
+        }
     }
     
     func connect(task:DFTask<T4>, number:Port4) -> DFTask4<T1, T2, T3, T4, T> {
         return self
     }
     
-    func setPortValue(number:Port4, value:T4) {
-        x4 = value
-    }
-    
-    func portValue(number:Port4) -> T4? {
-        return x4
-    }
-    
     override func addPort(inout ports:[Port]) {
         super.addPort(&ports)
-        ports.append(in4)
+        ports.append(InPort<T4>(number:PORT4, task:self))
     }
 }
 

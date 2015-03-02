@@ -9,12 +9,16 @@
 import Foundation
 
 public protocol PortNumber:Printable {
-    var value:Int {get}
+      var value:Int {get}
 }
 
 public struct Port1:PortNumber {
     public var value:Int {
         return 1
+    }
+    
+    public var hashValue:Int {
+        return value
     }
     
     public var description:String {
@@ -33,6 +37,10 @@ public struct Port2:PortNumber {
         return 2
     }
     
+    public var hashValue:Int {
+        return value
+    }
+    
     public var description:String {
         return "PORT2"
     }
@@ -49,6 +57,10 @@ public struct Port3:PortNumber {
         return 3
     }
     
+    public var hashValue:Int {
+        return value
+    }
+    
     public var description:String {
         return "PORT3"
     }
@@ -58,11 +70,16 @@ public struct Port3:PortNumber {
     }
 }
 
+
 public let PORT3 = Port3()
 
 public struct Port4:PortNumber {
     public var value:Int {
         return 4
+    }
+    
+    public var hashValue:Int {
+        return value
     }
     
     public var description:String {
@@ -79,50 +96,66 @@ public let PORT4 = Port4()
 public protocol Port {
     var identifier:String? {get set}
     var desc:String? {get set}
-    var task:Task? {get set}
     var value:Any? {get set}
 }
 
-public protocol TypedPort:Port {
+protocol _Port:Port {
     typealias PortType
     var typedValue:PortType? {get set}
+    var task:_Task {get set}
 }
 
-public struct InPort<PortType>:TypedPort {
-    public var number:PortNumber
-    public var task:Task?
+public struct InPort<PortType>:_Port {
     public var identifier:String? = nil
     public var desc:String? = nil
+    var task:_Task
+    public let number:PortNumber
+    
     public var typedValue:PortType? {
         get {
-            return task?.portValue(number) as? PortType
+            return task[number] as? PortType
         }
         set {
-            task?.setPortValue(number, value: newValue)
+            task[number] = newValue
         }
     }
     public var value:Any? {
         get {
-            return task?.portValue(number)
+            return task[number]
         }
         set {
-            task?.setPortValue(number, value: newValue)
+            task[number] = newValue
         }
     }
     
-    init (number:PortNumber, task:Task? = nil) {
+    init (number:PortNumber, task:_Task) {
         self.number = number
         self.identifier = number.description
         self.task = task
     }
 }
 
-public struct OutPort<T>:Port {
+public struct OutPort<PortType>:_Port {
     public var identifier:String? = nil
     public var desc:String? = nil
-    public var task:Task?
-    public var value:Any?    
-    init (task:Task? = nil) {
+    var task:_Task
+    public var typedValue:PortType? {
+        get {
+            return task[number] as? PortType
+        }
+        set {
+            task[number] = newValue
+        }
+    }
+    public var value:Any? {
+        get {
+            return task[number]
+        }
+        set {
+            task[number] = newValue
+        }
+    }
+    init (_ task:Task) {
         self.task = task
     }
 }

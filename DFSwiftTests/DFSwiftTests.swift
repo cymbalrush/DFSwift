@@ -66,6 +66,7 @@ class DFSwiftTests: XCTestCase {
         var task1 = task({(a:Int) -> Int in
             return a
         })
+        
         var task2 = task({(a:String, b:Int) -> Int in
             return b
         })
@@ -76,10 +77,20 @@ class DFSwiftTests: XCTestCase {
             return a
         })
         
-        task1~>task2[PORT2]
-        task2~>task3[PORT3]
-        task3~>task4[PORT4]
+        task1~>task2.IN2
+        task2~>task3.IN2
+        task3~>task4.IN4
        
+    }
+    
+    func testComputation() {
+        var task2 = task({(a:Int, b:Int) -> Int in
+            return a + b
+        })
+        task2[PORT1] = 1
+        task2[PORT2] = 3
+        let result = task2.compute()!
+        XCTAssert(result == 4, "Result must be 4")
     }
     
     func testObserver() {
